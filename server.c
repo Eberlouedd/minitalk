@@ -6,7 +6,7 @@
 /*   By: kyacini <kyacini@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 16:43:20 by kyacini           #+#    #+#             */
-/*   Updated: 2022/12/19 20:23:03 by kyacini          ###   ########.fr       */
+/*   Updated: 2022/12/19 21:00:43 by kyacini          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,29 +60,26 @@ char	*btoc(char *str)
 
 void receive_message(int signal)
 {
-	static char *message;
+	static char *message = NULL;
 	static int count = 0;
 	static char *final = NULL;
 
-	if (!message)
-		message = ft_calloc(1,1);
 	if (signal == SIGUSR1)
 	{
-		message = ft_realloc(message, '1');
+		message = ft_strjoin(message, "1");
 		count++;
 	}
 	else if (signal == SIGUSR2)
 	{
-		message = ft_realloc(message, '0');
+		message = ft_strjoin(message, "0");
 		count++;
 	}
 	if(count == 8)
 	{
 		final = ft_strjoin(final, btoc(message));
-		printf("%s", final);
 		if(ft_strcmp(message, "00000000") == 0)
 		{
-			printf("%s", final);
+			dprintf(2, "%s", final);
 			free(final);
 			final = NULL;	
 		}
@@ -102,4 +99,5 @@ int main()
 		pause();
 	}
 }
+
 
