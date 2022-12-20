@@ -6,21 +6,17 @@
 /*   By: kyacini <kyacini@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 16:43:09 by kyacini           #+#    #+#             */
-/*   Updated: 2022/12/19 20:23:41 by kyacini          ###   ########.fr       */
+/*   Updated: 2022/12/20 17:10:39 by kyacini          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdio.h>
-#include <sys/types.h>
-#include <signal.h>
+#include "minitalk.h"
 
 void send_message(int pid, char *str)
 {
 	int	i;
 
 	i = 0;
-	printf("%s\n", str);
 	while(str[i])
 	{
 		if(str[i] == '1')
@@ -28,15 +24,15 @@ void send_message(int pid, char *str)
 		else
 			kill(pid, SIGUSR2);
 		i++;
-		usleep(150);
+		usleep(400);
 	}
+	free(str);
 }
 
 char	*stob(int c)
 {
 	int i;
 	char *bin;
-	int	n;
 
 	i = 7;
 	bin = malloc(8 + 1);
@@ -62,16 +58,15 @@ char	*conv_bin(char *str)
 		bits_translate = ft_strjoin(bits_translate, stob(str[i]));
 		i++;
 	}
-	bits_translate = ft_strjoin(bits_translate, "00000000");
+	bits_translate = ft_strjoin(bits_translate, stob(0));
 	return bits_translate;
 }
-
+#include <stdio.h>
 int main(int argc, char **argv)
 {
 	char *message;
 
 	message = conv_bin(argv[2]);
 	send_message(ft_atoi(argv[1]), message);
-	free(message);
 	return (0);
 }
